@@ -478,42 +478,43 @@ public class AlquilerBicis {
 			// Evento de boton que añade a un usuario
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Pattern pat = Pattern.compile("^[A-Za-zÑñÁáÉéÍíÓóÚúÜü]{1,50}$");
+					int id = Integer.parseInt(tfCodUser.getText());
+					Pattern pat = Pattern.compile("^[A-Za-zÑñÁáÉéÍíÓóÚúÜü ]{1,50}$");
 					Matcher mat = pat.matcher(tfName.getText());
+					String nombre = tfName.getText();
 					if (tfName.getText().isEmpty() || tfCodUser.getText().isEmpty()) {
-						JOptionPane.showMessageDialog(null, "Por favor, rellene los dos campos.");
+						JOptionPane.showMessageDialog(null, "Porfavor, rellene los 2 campos");
 					} else if (!mat.matches()) {
-						JOptionPane.showMessageDialog(null, "El nombre no puede tener numeros ni simbolos especiales.",
-								"¡Error!", JOptionPane.ERROR_MESSAGE);
-					} else {
-						Connection con = ConnectionSingleton.getConnection();
-						PreparedStatement ins_pstmt = con.prepareStatement(
-								"INSERT INTO usuario (idusuario, nombre, estado)  VALUES (?, ?, 0)");
+						JOptionPane.showMessageDialog(null,
+								"El nombre no puede tener ni numeros ni simbolos especiales", "Error",
+								JOptionPane.ERROR_MESSAGE);
 
-						ins_pstmt.setInt(1, Integer.parseInt(tfCodUser.getText()));
-						ins_pstmt.setString(2, tfName.getText());
-						ins_pstmt.executeUpdate();
-						ins_pstmt.close();
-
-						JOptionPane.showMessageDialog(null, "El usuario ha sido añadido de forma exitosa.",
-								"Añadida con exito", JOptionPane.INFORMATION_MESSAGE);
-						
-						btnShowUsers.doClick();
 					}
-				} catch (SQLIntegrityConstraintViolationException ex) { // Caso erróneo
-					JOptionPane.showMessageDialog(null, "El usuario con este código ya ha sido creada anteriormente.",
-							"¡Error!", JOptionPane.ERROR_MESSAGE);
-				} catch (SQLException ex) {
-					JOptionPane.showMessageDialog(null, "Debe asignar un código al usuario.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+
+					else {
+						Connection con = ConnectionSingleton.getConnection();
+						PreparedStatement ins_pstmt = con
+								.prepareStatement("INSERT INTO usuario (idusuario,nombre)  VALUES (?, ?)");
+						ins_pstmt.setInt(1, id); // Primer “?”
+						ins_pstmt.setString(2, nombre); // Segundo “?”
+
+						int rowsInserted = ins_pstmt.executeUpdate();
+						ins_pstmt.close();
+						JOptionPane.showMessageDialog(null, "Usuario añadido ");
+						btnShowUsers.doClick();
+
+					}
+				} catch (SQLException ex) { // Caso erróneo
+					JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				} catch (NumberFormatException p2) {
-					JOptionPane.showMessageDialog(null, "Introduzca un numero para el id.", "¡Error!",
+					JOptionPane.showMessageDialog(null, "Introduzca un numero para el id ", "Error",
 							JOptionPane.ERROR_MESSAGE);
-				} finally {
-					tfCodUser.setText(null);
-					tfName.setText(null);
 				}
 
 				try {
+
+					int code;
+
 					Connection con = ConnectionSingleton.getConnection();
 					PreparedStatement sel1 = con.prepareStatement("SELECT idusuario from usuario ");
 					ResultSet rs = sel1.executeQuery();
@@ -521,14 +522,16 @@ public class AlquilerBicis {
 					cbCodUser.removeAllItems();
 
 					while (rs.next()) {
-						cbCodUser.addItem(rs.getInt("idusuario"));
+
+						code = rs.getInt("idusuario");
+						cbCodUser.addItem(code);
+
 					}
-					
 					rs.close();
 					sel1.close();
 					con.close();
 				} catch (SQLException e9) {
-					JOptionPane.showMessageDialog(null, e9.getMessage(), "¡Error!", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, e9.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
