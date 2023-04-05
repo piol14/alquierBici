@@ -31,7 +31,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
-public class AlquilerBicis {
+public class AlquilerBicisFinal {
 
 	/**
 	 * Constantes del tamaño de los componentes usados
@@ -61,7 +61,7 @@ public class AlquilerBicis {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AlquilerBicis window = new AlquilerBicis();
+					AlquilerBicisFinal window = new AlquilerBicisFinal();
 					window.frmAlquilerDeBicis.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -73,7 +73,7 @@ public class AlquilerBicis {
 	/**
 	 * Create the application.
 	 */
-	public AlquilerBicis() {
+	public AlquilerBicisFinal() {
 		initialize();
 	}
 
@@ -83,7 +83,7 @@ public class AlquilerBicis {
 	private void initialize() {
 		frmAlquilerDeBicis = new JFrame();
 		frmAlquilerDeBicis
-				.setIconImage(Toolkit.getDefaultToolkit().getImage(AlquilerBicis.class.getResource("/img/bike.png")));
+				.setIconImage(Toolkit.getDefaultToolkit().getImage(AlquilerBicisFinal.class.getResource("/img/bike.png")));
 		frmAlquilerDeBicis.setResizable(false);
 		frmAlquilerDeBicis.setTitle("Alquiler de bicis");
 		frmAlquilerDeBicis.setBounds(100, 100, 1120, 630);
@@ -164,13 +164,14 @@ public class AlquilerBicis {
 					con.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null, "No se pueden mostrar los cambios.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "No se pueden mostrar los cambios.", "¡Error!",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
 		btnShowBikes.setBorder(null);
 		btnShowBikes.setBackground(new Color(195, 195, 195));
-		btnShowBikes.setIcon(new ImageIcon(AlquilerBicis.class.getResource("/img/bike30.png")));
+		btnShowBikes.setIcon(new ImageIcon(AlquilerBicisFinal.class.getResource("/img/bike30.png")));
 		btnShowBikes.setFont(new Font("Dialog", Font.BOLD, 14));
 		btnShowBikes.setBounds(50, 290, LONGITUD_BTN_SECUNDARIO, ALTURA_BTN_SECUNDARIO);
 		frmAlquilerDeBicis.getContentPane().add(btnShowBikes);
@@ -243,12 +244,13 @@ public class AlquilerBicis {
 					con.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null, "No se pueden mostrar los cambios.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "No se pueden mostrar los cambios.", "¡Error!",
+							JOptionPane.ERROR_MESSAGE);
 				}
 				scrollPaneUsers.setVisible(true);
 			}
 		});
-		btnShowUsers.setIcon(new ImageIcon(AlquilerBicis.class.getResource("/img/user.png")));
+		btnShowUsers.setIcon(new ImageIcon(AlquilerBicisFinal.class.getResource("/img/user.png")));
 		btnShowUsers.setFont(new Font("Dialog", Font.BOLD, 14));
 		btnShowUsers.setBounds(385, 290, LONGITUD_BTN_SECUNDARIO, ALTURA_BTN_SECUNDARIO);
 		frmAlquilerDeBicis.getContentPane().add(btnShowUsers);
@@ -316,7 +318,7 @@ public class AlquilerBicis {
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "¡Error!", JOptionPane.ERROR_MESSAGE);
 		}
-		
+
 		/**
 		 * Botón alquilar bicicleta
 		 */
@@ -329,7 +331,7 @@ public class AlquilerBicis {
 					PreparedStatement check_pstmt = con.prepareStatement("SELECT estado FROM bici WHERE idbici = ?");
 					check_pstmt.setInt(1, (int) cbCodBike.getSelectedItem());
 					ResultSet rs = check_pstmt.executeQuery();
-					
+
 					// Verificar que la bicicleta no esté alquilada
 					if (rs.next()) {
 						if (rs.getInt("estado") == 1) {
@@ -340,14 +342,14 @@ public class AlquilerBicis {
 									.prepareStatement("SELECT bici_idbici FROM usuario WHERE idusuario = ?");
 							check_user_pstmt.setInt(1, (int) cbCodUser.getSelectedItem());
 							ResultSet rs2 = check_user_pstmt.executeQuery();
-							
+
 							// Verificar que el usuario no tenga ya una bicicleta alquilada
 							if (rs2.next()) {
 								if (rs2.getInt("bici_idbici") != 0) {
 									JOptionPane.showMessageDialog(null,
 											"Este usuario ya tiene una bicicleta alquilada.", "¡Error!",
 											JOptionPane.ERROR_MESSAGE);
-									
+
 									// Actualizar el estado de la bicicleta y asignarla al usuario
 								} else {
 									PreparedStatement upd_pstmt1 = con
@@ -361,9 +363,9 @@ public class AlquilerBicis {
 									upd_pstmt1.executeUpdate();
 									upd_pstmt2.executeUpdate();
 									con.commit();
-									
+
 									JOptionPane.showMessageDialog(null, "Bicicleta alquilada correctamente.");
-									
+
 									btnShowUsers.doClick();
 									btnShowBikes.doClick();
 								}
@@ -377,7 +379,7 @@ public class AlquilerBicis {
 		});
 		btnRent.setBorder(null);
 		btnRent.setBackground(new Color(195, 195, 195));
-		btnRent.setIcon(new ImageIcon(AlquilerBicis.class.getResource("/img/bike-park.png")));
+		btnRent.setIcon(new ImageIcon(AlquilerBicisFinal.class.getResource("/img/bike-park.png")));
 		btnRent.setFont(new Font("Dialog", Font.BOLD, 16));
 		btnRent.setBounds(800, 280, 250, ALTURA_BTN_PRINCIPAL);
 		frmAlquilerDeBicis.getContentPane().add(btnRent);
@@ -394,7 +396,7 @@ public class AlquilerBicis {
 					PreparedStatement check_pstmt = con.prepareStatement("SELECT estado FROM bici WHERE idbici = ?");
 					check_pstmt.setInt(1, (int) cbCodBike.getSelectedItem());
 					ResultSet rs = check_pstmt.executeQuery();
-					
+
 					// Verificar que la bicicleta esté alquilada
 					if (rs.next()) {
 						if (rs.getInt("estado") == 0) {
@@ -405,14 +407,14 @@ public class AlquilerBicis {
 									.prepareStatement("SELECT bici_idbici FROM usuario WHERE idusuario = ?");
 							check_user_pstmt.setInt(1, (int) cbCodUser.getSelectedItem());
 							ResultSet rs2 = check_user_pstmt.executeQuery();
-							
+
 							// Verificar que el usuario tenga ya una bicicleta alquilada
 							if (rs2.next()) {
 								if (rs2.getInt("bici_idbici") == 0) {
 									JOptionPane.showMessageDialog(null,
 											"Este usuario no tiene una bicicleta alquilada.", "¡Error!",
 											JOptionPane.ERROR_MESSAGE);
-									
+
 									// Actualizar el estado de la bicicleta y asignarla al usuario
 								} else {
 									PreparedStatement upd_pstmt1 = con
@@ -421,13 +423,13 @@ public class AlquilerBicis {
 									PreparedStatement upd_pstmt2 = con
 											.prepareStatement("UPDATE usuario SET bici_idbici = 0 WHERE idusuario = ?");
 									upd_pstmt2.setInt(1, (int) cbCodUser.getSelectedItem());
-									
+
 									upd_pstmt1.executeUpdate();
 									upd_pstmt2.executeUpdate();
 									con.commit();
-									
+
 									JOptionPane.showMessageDialog(null, "Bicicleta devuelta correctamente.");
-									
+
 									btnShowUsers.doClick();
 									btnShowBikes.doClick();
 								}
@@ -441,7 +443,7 @@ public class AlquilerBicis {
 		});
 		btnReturn.setBorder(null);
 		btnReturn.setBackground(new Color(195, 195, 195));
-		btnReturn.setIcon(new ImageIcon(AlquilerBicis.class.getResource("/img/bike-park.png")));
+		btnReturn.setIcon(new ImageIcon(AlquilerBicisFinal.class.getResource("/img/bike-park.png")));
 		btnReturn.setFont(new Font("Dialog", Font.BOLD, 16));
 		btnReturn.setBounds(800, 400, 250, ALTURA_BTN_PRINCIPAL);
 		frmAlquilerDeBicis.getContentPane().add(btnReturn);
@@ -474,7 +476,7 @@ public class AlquilerBicis {
 		 */
 		JButton btnAddUser = new JButton("  AÑADIR USUARIO");
 		btnAddUser.addActionListener(new ActionListener() {
-			
+
 			// Evento de boton que añade a un usuario
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -538,11 +540,11 @@ public class AlquilerBicis {
 		});
 		btnAddUser.setBorder(null);
 		btnAddUser.setBackground(new Color(195, 195, 195));
-		btnAddUser.setIcon(new ImageIcon(AlquilerBicis.class.getResource("/img/add.png")));
+		btnAddUser.setIcon(new ImageIcon(AlquilerBicisFinal.class.getResource("/img/add.png")));
 		btnAddUser.setFont(new Font("Dialog", Font.BOLD, 14));
 		btnAddUser.setBounds(385, 505, LONGITUD_BTN_SECUNDARIO, ALTURA_BTN_SECUNDARIO);
 		frmAlquilerDeBicis.getContentPane().add(btnAddUser);
-		
+
 		/**
 		 * Datos bici
 		 */
@@ -570,7 +572,7 @@ public class AlquilerBicis {
 					ins_pstmt.setInt(1, Integer.parseInt(tfCodBike.getText()));
 					ins_pstmt.executeUpdate();
 					ins_pstmt.close();
-					
+
 					JOptionPane.showMessageDialog(null, "La bicicleta ha sido añadida de forma exitosa.",
 							"Añadida con exito", JOptionPane.INFORMATION_MESSAGE);
 					btnShowBikes.doClick();
@@ -579,15 +581,15 @@ public class AlquilerBicis {
 					JOptionPane.showMessageDialog(null, "La bicicleta con este código ya ha sido creada anteriormente.",
 							"¡Error!", JOptionPane.ERROR_MESSAGE);
 				} catch (SQLException e) {
-					JOptionPane.showMessageDialog(null, "Debe asignar un código a la bicicleta para crearla.", "¡Error!",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Debe asignar un código a la bicicleta para crearla.",
+							"¡Error!", JOptionPane.ERROR_MESSAGE);
 				} catch (NumberFormatException p2) {
 					JOptionPane.showMessageDialog(null, "Introduzca un numero para el id.", "¡Error!",
 							JOptionPane.ERROR_MESSAGE);
 				} finally {
 					tfCodBike.setText(null);
 				}
-				
+
 				try {
 					Connection con = ConnectionSingleton.getConnection();
 					PreparedStatement sel1 = con.prepareStatement("SELECT idbici FROM bici WHERE idbici != 0");
@@ -598,7 +600,7 @@ public class AlquilerBicis {
 					while (rs.next()) {
 						cbCodBike.addItem(rs.getInt("idbici"));
 					}
-					
+
 					rs.close();
 					sel1.close();
 					con.close();
@@ -609,7 +611,7 @@ public class AlquilerBicis {
 		});
 		btnAddBike.setBorder(null);
 		btnAddBike.setBackground(new Color(195, 195, 195));
-		btnAddBike.setIcon(new ImageIcon(AlquilerBicis.class.getResource("/img/add.png")));
+		btnAddBike.setIcon(new ImageIcon(AlquilerBicisFinal.class.getResource("/img/add.png")));
 		btnAddBike.setFont(new Font("Dialog", Font.BOLD, 14));
 		btnAddBike.setBounds(50, 505, LONGITUD_BTN_SECUNDARIO, ALTURA_BTN_SECUNDARIO);
 		frmAlquilerDeBicis.getContentPane().add(btnAddBike);
