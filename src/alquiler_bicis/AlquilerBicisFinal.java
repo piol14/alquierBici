@@ -10,6 +10,8 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,7 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.table.TableModel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import java.awt.Component;
@@ -30,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JSpinner;
 
 public class AlquilerBicisFinal {
 
@@ -150,6 +153,7 @@ public class AlquilerBicisFinal {
 					while (rs_sel.next()) {
 						Object[] row = new Object[2];
 						row[0] = rs_sel.getInt("idbici");
+						
 						int estado = Integer.parseInt(rs_sel.getString("estado"));
 						if (estado == 0) {
 							row[1] = "Libre";
@@ -210,6 +214,17 @@ public class AlquilerBicisFinal {
 		frmAlquilerDeBicis.getContentPane().setLayout(null);
 
 		JTable tableUsers = new JTable(usuarios);
+		tableUsers.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				int index = tableUsers.getSelectedRow();
+				TableModel model = tableUsers.getModel();
+			
+				tfCodUser.setText(model.getValueAt(index, 0).toString());
+				tfName.setText(model.getValueAt(index, 1).toString());
+			}
+		});
 		tableUsers.setBounds(1, 1, 600, 0);
 		tableUsers.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		frmAlquilerDeBicis.getContentPane().add(tableUsers);
@@ -607,6 +622,50 @@ public class AlquilerBicisFinal {
 				} catch (SQLException e9) {
 					JOptionPane.showMessageDialog(null, "Pepe", "¡Error!", JOptionPane.ERROR_MESSAGE);
 				}
+			}
+		});
+		JButton btnActuUser = new JButton("ACTUALIZAR USUARIO");
+		btnActuUser.setFont(new Font("Dialog", Font.BOLD, 14));
+		btnActuUser.setBorder(null);
+		btnActuUser.setBackground(new Color(195, 195, 195));
+		btnActuUser.setBounds(637, 505, 181, 40);
+		frmAlquilerDeBicis.getContentPane().add(btnActuUser);
+		btnActuUser.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					int id = Integer.parseInt(tfCodUser.getText());
+					Pattern pat = Pattern.compile("^[A-Za-zÑñÁáÉéÍíÓóÚúÜü ]{1,50}$");
+					Matcher mat = pat.matcher(tfName.getText());
+					String nombre = tfName.getText();
+					if (tfName.getText().isEmpty() ) {
+						JOptionPane.showMessageDialog(null, "Porfavor, rellene el campo");
+					} else if (!mat.matches()) {
+						JOptionPane.showMessageDialog(null,
+								"El nombre no puede tener ni numeros ni simbolos especiales", "Error",
+								JOptionPane.ERROR_MESSAGE);
+
+					}
+
+					else {
+						Connection con = ConnectionSingleton.getConnection();
+						PreparedStatement upd_pstmt = con
+								.prepareStatement("UPDATE usuario SET nombre = ? WHERE idusuario= ?;");
+						
+						upd_pstmt.setString(1, nombre); // Segundo “?”
+						upd_pstmt.setInt(2, id); // Segundo “?”
+						 upd_pstmt.executeUpdate();
+						upd_pstmt.close();
+						JOptionPane.showMessageDialog(null, "Usuario actualizado");
+						btnShowUsers.doClick();
+
+					}
+				} catch (SQLException ex) { // Caso erróneo
+					JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					
+					
+				
+			}
 			}
 		});
 		btnAddBike.setBorder(null);
